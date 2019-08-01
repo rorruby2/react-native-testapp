@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {View, Text, StyleSheet, FlatList, Image, Button, ScrollView, TouchableOpacity} from "react-native";
 import { connect } from 'react-redux';
 import {removeFromCart, decreaseCart, increaseCart} from '../store/actions';
+import CartItemsList from '../components/CartItemsList';
 import firebase from "firebase";
 
 class CartScreen extends Component {
@@ -59,7 +60,6 @@ class CartScreen extends Component {
     render() {
         var total_cart_amount = this.props.cartItems.length > 0 ? this.props.cartItems.map((item) => item.total_price).reduce((a,b) => a + b, 0):0;
         var delivery_charge = 0
-        console.log('cart_items =>', this.props.cartItems)
         return (
             <ScrollView style={{backgroundColor: "#e4e6e8"}}>
                 <Text style={styles.TextStyle}>Cart Items</Text>
@@ -68,34 +68,14 @@ class CartScreen extends Component {
                     <View>
                         <FlatList
                             data={this.props.cartItems || []}
-                            keyExtractor={(item, index) => item.index }
+                            // keyExtractor={(item, index) => index }
                             renderItem={(info) => (
-                                <View style={{margin: 10}}>
-                                    <View style={{backgroundColor: "white", width: '100%',flexDirection: 'row'}}>
-                                        <View style={{ width: '50%'}}>
-                                            <Text style={styles.name}>{info.item.item_name}</Text>
-                                            <Text style={styles.name}>Price: {info.item.total_price}</Text>
-                                            <View style={{flexDirection: 'row', marginLeft:50, marginTop: 10}}>
-                                                <Text style={{textAlign: 'center', fontWeight: 'bold', marginTop: 8}}>Qty:- </Text>
-                                                <Button title="-" onPress={() => this.decreaseCart(info.item)}></Button>
-                                                <Text style={{width: '20%', textAlign: 'center', fontWeight: 'bold', marginTop: 8}}>{info.item.count}</Text>
-                                                <Button title="+" onPress={() => this.increaseCart(info.item)}></Button>
-                                            </View>
-                                        </View>
-                                        <View style={{ width: '50%'}}>
-                                            <Image source={{uri: info.item.image}} style={styles.itemImage}/>
-                                        </View>
-                                    </View>
-                                    <View style={{backgroundColor: "white", width: '100%', flexDirection: 'row'}}>
-                                        <TouchableOpacity style={styles.button}>
-                                            <Text style={styles.button_text}>Save</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.button}>
-                                            <Text style={styles.button_text} onPress={() => this.removeCart(info)}>Remove</Text>
-                                        </TouchableOpacity>
-                                    </View>
-
-                                </View>
+                                <CartItemsList
+                                    item={info.item} 
+                                    onItemRemoved={() => this.removeCart(info)}
+                                    onQuantityAdd={() => this.increaseCart(info.item)}
+                                    onQuantityRemove={() => this.decreaseCart(info.item)}
+                                />
                             )}
                         />
                         <View style={{margin: 10}}>

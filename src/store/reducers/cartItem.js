@@ -12,6 +12,7 @@ const increaseDecrease = (state, action, val) => {
     var v = state.items.filter(item => {
             if(item.id == action.payload.id)
                 item.count+= val;
+                item.count = item.count > 1 ? item.count : 1
                 item.total_price = item.price * item.count
             return true;
         });
