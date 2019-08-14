@@ -3,15 +3,9 @@ import {View, Text, StyleSheet, FlatList, Image, Button, ScrollView, TouchableOp
 import { connect } from 'react-redux';
 import {removeFromCart, decreaseCart, increaseCart} from '../store/actions';
 import CartItemsList from '../components/CartItemsList';
-// import console = require("console");
-import {fetchAddressFromApi} from '../store/actions';
-// import firebase from "firebase";
 
-class CartScreen extends Component {
+class Order extends Component {
 
-    componentDidMount(){
-        this.props.fetchAddress();
-    }
 
     removeCart = (data) => {
         data.item.count = 1
@@ -29,25 +23,43 @@ class CartScreen extends Component {
     render() {
         var total_cart_amount = this.props.cartItems.length > 0 ? this.props.cartItems.map((item) => item.total_price).reduce((a,b) => a + b, 0):0;
         var delivery_charge = 0;
-        var default_address = this.props.address ? this.props.address.find((address)=> address.default == true) : null;
-        console.log('address=>',default_address)
-
+        var address = this.props.navigation.state.params.address
+        // var default_address = this.props.address ? this.props.address.find((address)=> address.default == true) : null;
+        // console.log('address=>',default_address)
         return (
             <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-                <Text style={styles.TextStyle}>Cart Items</Text>
-                {
-                    this.props.cartItems.length > 0 ?                    
+                <Text style={styles.TextStyle}>Order Summary</Text>                 
                     <View>
+                        <View style={{margin: 10}}>
+                            <View style={{backgroundColor: "white", width: '100%'}}>
+                                <Text style={{margin: 5, fontWeight: 'bold'}}>{address.name}</Text>
+                                <Text style={{margin: 5}}>{address.address}</Text>
+                                <Text style={{margin: 5}}>{address.mobile}</Text>
+                                <Button title="Change or Add Address" onPress={() => this.props.navigation.navigate('Address')}></Button>
+
+                            </View>
+                        </View>
                         <FlatList
                             data={this.props.cartItems || []}
                             // keyExtractor={(item, index) => index }
                             renderItem={(info) => (
-                                <CartItemsList
-                                    item={info.item} 
-                                    onItemRemoved={() => this.removeCart(info)}
-                                    onQuantityAdd={() => this.increaseCart(info.item)}
-                                    onQuantityRemove={() => this.decreaseCart(info.item)}
-                                />
+                                <View style={{margin: 10}}>
+                                    <View style={{backgroundColor: "white", width: '100%',flexDirection: 'row'}}>
+                                        <View style={{ width: '50%'}}>
+                                            <Text style={styles.name}>{info.item.item_name}</Text>
+                                            <Text style={styles.name}>Price: {info.item.total_price}</Text>
+                                            <View style={{flexDirection: 'row', marginLeft:50, marginTop: 10, marginBottom: 10}}>
+                                                <Text style={{textAlign: 'center', fontWeight: 'bold', marginTop: 8}}>Qty:- </Text>
+                                                <Button title="-" onPress={() => this.decreaseCart(info.item)}></Button>
+                                                <Text style={{width: '20%', textAlign: 'center', fontWeight: 'bold', marginTop: 8}}>{info.item.count}</Text>
+                                                <Button title="+" onPress={() => this.increaseCart(info.item)}></Button>
+                                            </View>
+                                        </View>
+                                        <View style={{ width: '50%'}}>
+                                            <Image source={{uri: info.item.image}} style={styles.itemImage}/>
+                                        </View>
+                                    </View>
+                                </View>  
                             )}
                         />
                         <View style={{margin: 10}}>
@@ -69,13 +81,10 @@ class CartScreen extends Component {
                         </View>
                         <View style={{margin: 10}}>
                             <View style={{backgroundColor: "white", width: '100%'}}>
-                                <Button title="Place Order" onPress={() => this.props.navigation.navigate('Order', {address: default_address,})}></Button>
+                                <Button title="Checkout" onPress={() => this.props.navigation.navigate('Address')}></Button>
                             </View>
                         </View>
                     </View>
-                    
-                    : <Text style={{fontSize: 15, textAlign: 'center'}}>No items in your cart</Text>
-                }
             </ScrollView>
         );
     }
@@ -84,7 +93,7 @@ class CartScreen extends Component {
 const mapStateToProps = (state) => {
     return {
         cartItems: state.cartItems.items,
-        address: state.addressList.address,
+        // address: state.addressList.address,
     }
 }
 
@@ -93,12 +102,12 @@ const mapDispatchToProps = (dispatch) => {
         removeCart: (item) => dispatch(removeFromCart(item)),
         increaseCart: (item) => dispatch(increaseCart(item)),
         decreaseCart: (item) => dispatch(decreaseCart(item)),
-        fetchAddress: () => dispatch(fetchAddressFromApi()),
+        // fetchAddress: () => dispatch(fetchAddressFromApi()),
     }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(Order);
 
 const styles = StyleSheet.create({
     TextStyle:{
@@ -132,4 +141,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'right'
     },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    itemImage: {
+        height: 80,
+        width: '85%',
+        marginLeft: 20,
+        marginTop: 10
+    }
 });

@@ -14,6 +14,8 @@ import Apparel from './src/containers/Apparel';
 import ShoppingCartIcon from './src/components/ShoppingCartIcon';
 import Cart from './src/containers/Cart';
 import ItemDetail from './src/components/ItemDetails';
+import Address from './src/containers/Address';
+import Order from './src/containers/Order';
 import { createStore,applyMiddleware } from 'redux';
 import RootReducer from "./src/store/rootreducer";
 import thunk from 'redux-thunk';
@@ -41,6 +43,8 @@ const MyDrawerNavigator = createDrawerNavigator(
     // Profile: {screen: Profile},
     FAQ: {screen: FAQ},
     Cart: {screen: Cart},
+    Address: {screen: Address},
+    Order: {screen: Order},
     LogOut: {screen: LogOut}
   },
 );
@@ -76,6 +80,12 @@ const AppStackNavigator = createStackNavigator(
     },
     ItemDetail: {
       screen: ItemDetail,
+    },
+    Address: {
+      screen: Address,
+    },
+    Order: {
+      screen: Order,
     },
     SignUp: {
       screen: SignUp,
