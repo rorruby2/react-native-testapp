@@ -8,6 +8,10 @@ class Faq extends React.Component {
     loading: false
   }
 
+  static navigationOptions = {
+    headerTitle: 'FAQ'
+  }
+
   componentDidMount(){
     this.setState({
       loading: true

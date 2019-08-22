@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Modal, View, Image, Text, Button, TouchableOpacity } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import { connect } from "react-redux";
 import {addToCart, selectItem, unselectItem} from '../store/actions';
 import firebase from "firebase";
@@ -44,7 +45,7 @@ class ItemDetails extends React.Component {
                 <Text style={styles.itemName}>{selected_item.item_name}</Text>
                 <Text style={styles.itemName}>Rs. {selected_item.price}</Text>
                 <View style={{padding: 10}}>
-                    <Button title="Close" onPress={() => this.props.navigation.pop()} />
+                    <Button title="Close" onPress={() => this.props.navigation.goBack(null)} />
                 </View>
                 {
                     this.props.items.filter(({id}) => id == selected_item.id).length > 0 ?

@@ -7,6 +7,10 @@ import {fetchApparelFromApi} from '../store/actions';
 
 class Apparel extends React.Component {
 
+  static navigationOptions = {
+    headerTitle: 'Apparel Items'
+  }
+
 // calling the fetch Apperl function
   componentDidMount(){
     this.props.fetchApparel();
@@ -15,7 +19,6 @@ class Apparel extends React.Component {
   render() {
     return (
       <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-        <Text style={styles.TextStyle}>Apparel Items</Text>
       {
         this.props.loading ?
         <ActivityIndicator color = '#fff' size = "large" style = {styles.activityIndicator}/>

@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { View, Text } from "react-native";
-import {createDrawerNavigator, createAppContainer, createBottomTabNavigator, createStackNavigator, createSwitchNavigator } from "react-navigation";
+import {createDrawerNavigator, createAppContainer, createBottomTabNavigator, createStackNavigator, createSwitchNavigator, StackNavigator } from "react-navigation";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Login from './src/containers/Login';
 import SignUp from './src/containers/SignUp';
 import Grocery from './src/containers/Grocery';
 import MainScreen from './src/containers/MainScreen';
 import FAQ from './src/containers/Faq';
-import Profile from './src/containers/Profile';
 import LogOut from './src/containers/LogOut';
 import Electronics from './src/containers/ElectronicItems';
 import Apparel from './src/containers/Apparel';
@@ -16,6 +15,7 @@ import Cart from './src/containers/Cart';
 import ItemDetail from './src/components/ItemDetails';
 import Address from './src/containers/Address';
 import Order from './src/containers/Order';
+// import BarCode from './src/containers/BarCode'; 
 import { createStore,applyMiddleware } from 'redux';
 import RootReducer from "./src/store/rootreducer";
 import thunk from 'redux-thunk';
@@ -30,68 +30,100 @@ class App extends Component {
   render() {
     return  <Provider store={store}>
               <AppContainer />
-           </Provider>;
+            </Provider>;
   }
 }
 
+
+// const withHeader = (screen: Function, routeName: string): StackNavigator =>
+//   createStackNavigator(
+//     { [routeName]: { screen } },
+//     {
+//       headerMode: 'screen',
+//       defaultNavigationOptions: ({ navigation }) => {  
+//         return {  
+//             headerLeft: ( 
+//                 <Icon
+//                   name="bars"
+//                   onPress={() => navigation.openDrawer()}
+//                   size={20}
+//                   color="#000"
+//                   style={{ marginLeft: 10 }}
+//                 />
+//             ),
+//             headerTitle: routeName
+//         };  
+//       }  
+//     },
+//   );
+
+
+  const mainDrawer = createStackNavigator(
+    {
+      MainScreen: {
+        screen: MainScreen, 
+        navigationOptions: ({navigation}) => {
+          return {  
+            headerTitle: 'MainScreen',
+            headerLeft: ( 
+                <Icon
+                  name="bars"
+                  onPress={() => navigation.openDrawer()}
+                  size={20}
+                  color="#000"
+                  style={{ marginLeft: 10 }}
+                />
+            )
+          }
+        } 
+      },
+      Grocery: {screen: Grocery},
+      Electronics: {screen: Electronics},
+      Apparel: {screen: Apparel},
+      FAQ: {screen: FAQ},
+      Cart: {screen: Cart},
+      Address: {screen: Address},
+      Order: {screen: Order},
+      // BarCode: {screen: BarCode},
+      ItemDetail: {screen: ItemDetail}
+    },
+    {
+      initialRouteName: 'MainScreen',
+      defaultNavigationOptions: ({ navigation }) => {
+        return {
+          headerRight:(<ShoppingCartIcon />),
+        };
+      }
+    });
+
 const MyDrawerNavigator = createDrawerNavigator(
   {
-    MainScreen: {screen: MainScreen},
+    MainScreen: {screen: mainDrawer},
     Grocery: {screen: Grocery},
     Electronics: {screen: Electronics},
     Apparel: {screen: Apparel},
-    // Profile: {screen: Profile},
     FAQ: {screen: FAQ},
     Cart: {screen: Cart},
     Address: {screen: Address},
+    // Address: {screen: withHeader(Address, "Address")},
     Order: {screen: Order},
+    // BarCode: {screen: BarCode},
     LogOut: {screen: LogOut}
   },
-);
+); 
 
-const AppStackNavigator = createStackNavigator(
+const AppSwitchNavigator = createSwitchNavigator(
   {
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        header: null,
-      }
-    },
     MainScreen: {
       screen: MyDrawerNavigator,
     },
-    Grocery: {
-      screen: Grocery,
-    },
-    Electronics: {
-      screen: Electronics,
-    },
-    Apparel: {
-      screen: Apparel,
-    },
-    FAQ: {
-      screen: FAQ,
-    },
-    // Profile: {
-    //   screen: Profile
-    // },
-    Cart: {
-      screen: Cart,
-    },
-    ItemDetail: {
-      screen: ItemDetail,
-    },
-    Address: {
-      screen: Address,
-    },
-    Order: {
-      screen: Order,
+    Login: {
+      screen: Login,
+      navigationOptions: {header: null,}
     },
     SignUp: {
       screen: SignUp,
-      navigationOptions: {
-        header: null,
-      }
+      navigationOptions: {header: null,}
     },
     LogOut: {
       screen: LogOut,
@@ -99,26 +131,10 @@ const AppStackNavigator = createStackNavigator(
   },
   {
     initialRouteName : 'Login',
-    defaultNavigationOptions: ({ navigation }) => {
-      return {
-        headerLeft: (
-          <Icon
-            name="bars"
-            onPress={() => navigation.openDrawer()}
-            size={20}
-            color="#000"
-            style={{ marginLeft: 10 }}
-          />
-          ),
-        headerRight:(<ShoppingCartIcon />),
-        headerTitle: 'ShoppingApp'
-      };
-    }
   }
 
 );
 
-
-const AppContainer = createAppContainer(AppStackNavigator);
+const AppContainer = createAppContainer(AppSwitchNavigator);
 
 export default App;

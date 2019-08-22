@@ -3,14 +3,12 @@ import {View, Text, StyleSheet, FlatList, Image, Button, ScrollView, TouchableOp
 import { connect } from 'react-redux';
 import {removeFromCart, decreaseCart, increaseCart} from '../store/actions';
 import CartItemsList from '../components/CartItemsList';
-// import console = require("console");
 import {fetchAddressFromApi} from '../store/actions';
-// import firebase from "firebase";
 
 class CartScreen extends Component {
 
-    componentDidMount(){
-        this.props.fetchAddress();
+    static navigationOptions = {
+        headerTitle: 'Cart Items'
     }
 
     removeCart = (data) => {
@@ -33,50 +31,50 @@ class CartScreen extends Component {
         console.log('address=>',default_address)
 
         return (
-            <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-                <Text style={styles.TextStyle}>Cart Items</Text>
-                {
-                    this.props.cartItems.length > 0 ?                    
-                    <View>
-                        <FlatList
-                            data={this.props.cartItems || []}
-                            // keyExtractor={(item, index) => index }
-                            renderItem={(info) => (
-                                <CartItemsList
-                                    item={info.item} 
-                                    onItemRemoved={() => this.removeCart(info)}
-                                    onQuantityAdd={() => this.increaseCart(info.item)}
-                                    onQuantityRemove={() => this.decreaseCart(info.item)}
-                                />
-                            )}
-                        />
-                        <View style={{margin: 10}}>
-                            <View style={{backgroundColor: "white", width: '100%'}}>
-                                <Text style={{margin: 5, borderBottomWidth: 1, borderBottomColor: 'gray', fontWeight: 'bold'}}>PRICE DETAILS</Text>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Text style={styles.leftText}>Price</Text>
-                                    <Text style={styles.rightText}>Rs.{total_cart_amount}</Text>
-                                </View>
-                                <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'gray',}}>
-                                    <Text style={styles.leftText}>Delivery</Text>
-                                    <Text style={styles.rightText}>(Free) Rs.{delivery_charge}</Text>
-                                </View>
-                                <View style={{flexDirection: 'row'}}>
-                                    <Text style={styles.leftText}>Amount Payble</Text>
-                                    <Text style={styles.rightText}>Rs.{total_cart_amount}</Text>
+            <View style={styles.container}>
+                <ScrollView style={{backgroundColor: "#e4e6e8"}}>
+                    {
+                        this.props.cartItems.length > 0 ?                    
+                        <View>
+                            <FlatList
+                                data={this.props.cartItems || []}
+                                renderItem={(info) => (
+                                    <CartItemsList
+                                        item={info.item} 
+                                        onItemRemoved={() => this.removeCart(info)}
+                                        onQuantityAdd={() => this.increaseCart(info.item)}
+                                        onQuantityRemove={() => this.decreaseCart(info.item)}
+                                    />
+                                )}
+                            />
+                            <View style={{margin: 10}}>
+                                <View style={{backgroundColor: "white", width: '100%'}}>
+                                    <Text style={{margin: 5, borderBottomWidth: 1, borderBottomColor: 'gray', fontWeight: 'bold'}}>PRICE DETAILS</Text>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text style={styles.leftText}>Price</Text>
+                                        <Text style={styles.rightText}>Rs.{total_cart_amount}</Text>
+                                    </View>
+                                    <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'gray',}}>
+                                        <Text style={styles.leftText}>Delivery</Text>
+                                        <Text style={styles.rightText}>(Free) Rs.{delivery_charge}</Text>
+                                    </View>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <Text style={styles.leftText}>Amount Payble</Text>
+                                        <Text style={styles.rightText}>Rs.{total_cart_amount}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
-                        <View style={{margin: 10}}>
-                            <View style={{backgroundColor: "white", width: '100%'}}>
-                                <Button title="Place Order" onPress={() => this.props.navigation.navigate('Order', {address: default_address,})}></Button>
-                            </View>
-                        </View>
+                        : <Text style={{fontSize: 15, textAlign: 'center'}}>No items in your cart</Text>
+                    }
+                </ScrollView>
+
+                <View style={styles.bottomContainer}>
+                    <View style={{backgroundColor: "white", width: '100%'}}>
+                        <Button title="Place Order" onPress={() => this.props.navigation.navigate('Order', {address: default_address,})}></Button>
                     </View>
-                    
-                    : <Text style={{fontSize: 15, textAlign: 'center'}}>No items in your cart</Text>
-                }
-            </ScrollView>
+                </View>
+        </View>
         );
     }
 }
@@ -93,14 +91,17 @@ const mapDispatchToProps = (dispatch) => {
         removeCart: (item) => dispatch(removeFromCart(item)),
         increaseCart: (item) => dispatch(increaseCart(item)),
         decreaseCart: (item) => dispatch(decreaseCart(item)),
-        fetchAddress: () => dispatch(fetchAddressFromApi()),
+        // fetchAddress: () => dispatch(fetchAddressFromApi()),
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        flexDirection: 'column'
+    },
     TextStyle:{
         fontSize : 20,
         textAlign: 'center',
@@ -132,4 +133,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'right'
     },
+    bottomContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    }
 });

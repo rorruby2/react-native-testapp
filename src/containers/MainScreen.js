@@ -1,8 +1,14 @@
 import React from "react";
 import { View, ViewPagerAndroid } from "react-native";
 import ViewPager from "../components/viewPager";
+import {fetchAddressFromApi} from '../store/actions';
+import { connect } from 'react-redux';
 
 class MainScreen extends React.Component {
+
+  componentDidMount(){
+    this.props.fetchAddress()
+  }
 
   slider1 =  [{image: require('./../images/grocery1.jpeg'), name: 'Grocery'},
               {image: require('./../images/grocery2.jpeg'), name: 'Grocery'},
@@ -27,4 +33,17 @@ class MainScreen extends React.Component {
   }
 }
 
-export default MainScreen;
+const mapStateToProps = (state) => {
+  return {
+      // cartItems: state.cartItems.items,
+      address: state.addressList.address,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      fetchAddress: () => dispatch(fetchAddressFromApi()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

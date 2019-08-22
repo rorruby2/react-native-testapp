@@ -7,15 +7,19 @@ import {fetchAddressFromApi, addAddress} from '../store/actions';
 
 class Address extends React.Component {
 
-// calling the fetch Apperl function
-  componentDidMount(){
-    this.props.fetchAddress();
+  static navigationOptions = {
+    headerTitle: 'Address'
   }
+
+// calling the fetch Apperl function
+  // componentDidMount(){
+  //   this.props.fetchAddress();
+  // }
 
   render() {
     return (
       <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-        <Text style={styles.TextStyle}>Address</Text>
+        {/* <Text style={styles.TextStyle}>Address</Text> */}
       {
         this.props.loading ?
         <ActivityIndicator color = '#fff' size = "large" style = {styles.activityIndicator}/>
@@ -67,7 +71,7 @@ mapStateToProps = (state) => {
 
 mapDispatchToProps = (dispatch) => {
   return{
-    fetchAddress: () => dispatch(fetchAddressFromApi()),
+    // fetchAddress: () => dispatch(fetchAddressFromApi()),
     addAddress: (item) => dispatch(addAddress(item)),
   }
 }

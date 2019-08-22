@@ -18,7 +18,6 @@ class Grocery extends React.Component {
   render() {
     return (
       <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-        <Text style={styles.TextStyle}>Grocery Items</Text>
       {
         this.props.loading ?
         <ActivityIndicator color = '#fff' size = "large" style = {styles.activityIndicator}/>

@@ -8,7 +8,7 @@ import {fetchElectronicsFromApi} from '../store/actions';
 class ElectronicItems extends React.Component {
 
   static navigationOptions = {
-    headerTitle: 'Electronics Items'
+    headerTitle: 'Electronic Items'
   }
 
   componentDidMount(){
@@ -18,7 +18,6 @@ class ElectronicItems extends React.Component {
   render() {
     return (
       <ScrollView style={{backgroundColor: "#e4e6e8"}}>
-        <Text style={styles.TextStyle}>Electronic Items</Text>
       {
         this.props.loading ?
         <ActivityIndicator color = '#fff' size = "large" style = {styles.activityIndicator}/>
