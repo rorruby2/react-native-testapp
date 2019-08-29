@@ -1,7 +1,7 @@
 package com.testproject;
 
 import android.app.Application;
-
+import org.reactnative.camera.RNCameraPackage;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
 //import io.invertase.firebase.modules.app.ReactNativeFirebaseAppPackage;
@@ -28,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new VectorIconsPackage(),
             //new ReactNativeFirebaseAppPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+            new RNCameraPackage()
       );
     }
 
